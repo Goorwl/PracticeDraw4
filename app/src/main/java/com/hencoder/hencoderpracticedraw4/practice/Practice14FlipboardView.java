@@ -16,10 +16,10 @@ import android.view.animation.LinearInterpolator;
 import com.hencoder.hencoderpracticedraw4.R;
 
 public class Practice14FlipboardView extends View {
-    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Bitmap bitmap;
-    Camera camera = new Camera();
-    int degree;
+    Paint          paint    = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Bitmap         bitmap;
+    Camera         camera   = new Camera();
+    int            degree;
     ObjectAnimator animator = ObjectAnimator.ofInt(this, "degree", 0, 180);
 
     public Practice14FlipboardView(Context context) {
@@ -65,15 +65,26 @@ public class Practice14FlipboardView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int bitmapWidth = bitmap.getWidth();
+        int bitmapWidth  = bitmap.getWidth();
         int bitmapHeight = bitmap.getHeight();
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
-        int x = centerX - bitmapWidth / 2;
-        int y = centerY - bitmapHeight / 2;
+        int centerX      = getWidth() / 2;
+        int centerY      = getHeight() / 2;
+        int x            = centerX - bitmapWidth / 2;
+        int y            = centerY - bitmapHeight / 2;
 
+        // 上半部分
+        canvas.save();
+        canvas.clipRect(0, 0, getWidth(), centerY);
+        canvas.drawBitmap(bitmap, x, y, paint);
+        canvas.restore();
+        // 第二遍绘制：下半部分
         canvas.save();
 
+        if (degree < 90) {
+            canvas.clipRect(0, centerY, getWidth(), getHeight());
+        } else {
+            canvas.clipRect(0, 0, getWidth(), centerY);
+        }
         camera.save();
         camera.rotateX(degree);
         canvas.translate(centerX, centerY);
